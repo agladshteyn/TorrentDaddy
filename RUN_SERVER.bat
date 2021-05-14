@@ -1,0 +1,1 @@
+CALL cmd /K "npm run serve"
