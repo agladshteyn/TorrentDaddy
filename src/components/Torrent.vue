@@ -27,33 +27,37 @@
                    <md-button class="md-primary md-raised" @click="onMessageDialogOk">Ok</md-button>
                 </md-dialog-actions>
             </md-dialog>
-			
-			
-			
 			<div v-if="status !== ''" class="md-layout md-gutter" style="margin:10px">
 				<h4>{{title}}</h4>
 			</div>  
 			<div v-if="status !== ''" class="md-layout md-gutter" style="margin:10px">
-			
 				<!-- Progress bar -->
 				<div class="progress-bar-container md-layout-item md-size-40 lg-size-30 sm-size-100 md-gutter">
-				 
-						<span>{{status}}</span>
-						<div style="display:flex">
-							<md-progress-bar class="torrent-progress-bar" md-mode="determinate" style="margin-left:10px;margin-top:10px" :md-value="progress"></md-progress-bar>
-							<span style="margin-left:10px">{{progress}}%</span>
-						</div>
-				</div>
-				
-				
-				
-				<div class="torrent-stats md-layout-item md-gutter">
+					<span>{{status}}</span>
 					<div style="display:flex">
+						<md-progress-bar class="torrent-progress-bar" md-mode="determinate" style="margin-left:10px;margin-top:10px" :md-value="progress"></md-progress-bar>
+						<span style="margin-left:10px">{{progress}}%</span>
+					</div>
+				</div>
+				<div class="torrent-stats md-layout-item md-gutter">
+					<div style="display:flex" class="speedStatsContainer">
+						<div>
+							<md-icon>arrow_downward</md-icon>
+							<md-tooltip>Download speed</md-tooltip>
+							<span>{{downloadSpeed}}</span>
+						</div>
+						<div style="margin-left:25px">
+							<md-icon>arrow_upward</md-icon>
+							<md-tooltip>Upload speed</md-tooltip>
+							<span>{{uploadSpeed}}</span>
+						</div>
+					</div>
+					<div style="display:flex" class="numPeersAndSizeContainer">
 						<span class="num-peers" style="margin-left:25px">{{peersFormatted}}</span>
 						<span style="margin-left:25px">{{sizeFormatted}}</span>
 					</div>
 					<div class="save-files-container">
-						<span>Total files: {{totalFiles}}</span>
+						<span>Files: {{totalFiles}}</span>
 						<md-button id="btnSave" @click="onSaveTorrentClick" class="md-icon-button md-seconday" style="top:-8px"  v-if="savingFiles === false">
                             <md-tooltip>Save</md-tooltip>
                             <md-icon class="md-size-1x">download</md-icon>
@@ -61,90 +65,18 @@
 						<span v-if="savingFiles" style="margin-left:25px;color:gray;font-style:italic">Saving...</span>
 					</div>
 				</div>
-				
-				
-				
-				
-				
 			</div>
 			<div v-if="status !== ''" class="md-layout md-gutter" style="margin:10px">
 				<div class="torrent-stats md-layout-item md-gutter">
 					<md-button  style="max-width: 120px;min-width: 120px;padding-right:20px;padding-left:20px" class="control-button md-raised md-primary" @click="onStreamClick"><md-icon>play_circle_outline</md-icon><span style="margin-left:5px">Play</span></md-button>
 					<md-button  style="max-width: 120px; min-width: 120px;padding-right:20px;padding-left:20px"   class="control-button md-raised md-accent" @click="onDeleteTorrentClick"><md-icon>delete</md-icon><span style="margin-left:5px">Delete</span></md-button>
-				
-					<!--<md-button  class="md-primary" @click="onStreamClick">
-                        <md-tooltip>Stream</md-tooltip>
-                        <md-icon class="md-size-2x">play_circle_outline</md-icon>
-                    </md-button>
-					
-                    <md-button @click="onDeleteTorrentClick" class="md-icon-button md-accent">
-                        <md-tooltip>Delete</md-tooltip>
-                        <md-icon class="md-size-1x">clear</md-icon>
-                    </md-button> -->
 				</div>
-				
 				<div class="torrent-stats md-layout-item md-gutter" style="justify-content:flex-end">
 					<a :href="torrentMagnetUri" style="margin-top:20px" target="_blank">[Magnet URI]</a>
                        <span style="margin-left:5px;margin-right:5px;margin-top:20px">|</span>
                        <a :href="torrentFileBlobURL"  style="margin-top:20px"  :download="torrentDownloadLink">[Download .torrent]</a>
 				</div>
-				
 			</div>
-			
-	 
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-          <!--  <div v-if="status !== ''" class="md-layout md-gutter" style="margin:10px">
-                <div class="md-layout-item md-size-80 md-gutter">
-                    <h4 style="margin-bottom:20px">{{title}}</h4>
-                    <div style="display:flex">
-                        <span>{{status}}</span>
-                        <md-progress-bar md-mode="determinate" style="margin-left:10px;width:100px;margin-top:10px" :md-value="progress"></md-progress-bar>
-                        <span style="margin-left:10px">{{progress}}%</span>
-						<span style="margin-left:25px">{{peersFormatted}}</span>
-						<span style="margin-left:25px">{{sizeFormatted}}</span>
-						<span style="margin-left:25px">Total files: {{totalFiles}}</span>
-						<md-button id="btnSave" @click="onSaveTorrentClick" class="md-icon-button md-seconday" style="top:-8px"  v-if="savingFiles === false">
-                            <md-tooltip>Save</md-tooltip>
-                            <md-icon class="md-size-1x">download</md-icon>
-                        </md-button>
-						<span v-if="savingFiles" style="margin-left:25px;color:gray;font-style:italic">Saving...</span>
-                    </div>
-                    <div style="margin-top:10px">
-                       <a :href="torrentMagnetUri" target="_blank">[Magnet URI]</a>
-                       <span style="margin-left:5px;margin-right:5px">|</span>
-                       <a :href="torrentFileBlobURL" :download="torrentDownloadLink">[Download .torrent]</a>
-                    </div>
-                </div>
-                <div class="md-layout-item" style="display: flex;align-items: center;justify-content: center">
-                    <md-button  class="md-icon-button md-primary" @click="onStreamClick">
-                        <md-tooltip>Stream</md-tooltip>
-                        <md-icon class="md-size-2x">play_circle_outline</md-icon>
-                    </md-button>
-                    <md-button @click="onDeleteTorrentClick" class="md-icon-button md-seconday">
-                        <md-tooltip>Delete</md-tooltip>
-                        <md-icon class="md-size-1x">clear</md-icon>
-                    </md-button>
-                </div>
-            </div> -->
-			
-			
-			
-			
-			
-			
-			
-			
-			
             <div v-if="status === ''" class="md-layout md-gutter" style="margin:10px">
                <div class="md-layout-item md-size-10 md-gutter">
                    <md-progress-spinner md-mode="indeterminate" :md-diameter="50"></md-progress-spinner>
@@ -192,7 +124,9 @@ export default {
         showStreamDialog: false,
 		showMessageDialog: false,
 		message: '',
-		savingFiles: false
+		savingFiles: false,
+		downloadSpeed: '0 KB',
+		uploadSpeed: '0 KB'
     };
   },
   components: {
@@ -234,6 +168,8 @@ export default {
 			self.sizeFormatted = self.humanFileSize(self.torrent.instance.downloaded)
 			self.totalFiles = self.torrent.instance.files.length
 			
+			self.downloadSpeed = self.humanFileSize(self.torrent.instance.downloadSpeed)
+			self.uploadSpeed = self.humanFileSize(self.torrent.instance.uploadSpeed)
 		}
      }, 5000)
   },
@@ -408,6 +344,10 @@ export default {
 	
 	.save-files-container {
 		margin-left: 0px;
+		margin-top: 20px;
+	}
+	
+	.numPeersAndSizeContainer {
 		margin-top: 20px;
 	}
 }
