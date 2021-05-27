@@ -21,7 +21,9 @@
     "vue": "vue/dist/vue.common.js"
   },
   "dependencies": {
+    "@syncfusion/ej2-vue-grids": "^19.1.64",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "browser-socket": "^1.0.2",
     "browserify": "^17.0.0",
     "browserify-css": "^0.15.0",
     "envify": "^4.1.0",

@@ -9,6 +9,10 @@
              </md-dialog-actions>
         </md-dialog>
         <div style="width:100%;text-align:center">
+			<div class="alert success">
+			  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+				You can manually add a torrent below or add one directly from the search results.
+			</div>
             <form style="margin:auto;width:60%" enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
                 <div class="dropbox">
                     <input type="file" single :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" accept=".torrent" class="input-file">
@@ -125,7 +129,16 @@ export default {
                 }
            }
        }
-    
+	   
+	   // Check to see if torrent already exists.
+	    for (let i in self.torrents) {
+			let torrent = self.torrents[i]
+			if (torrent.id === torrentId) {
+				this.$store.dispatch('alert/error', 'Torrent has already been added.');
+				return;
+			}
+	    }
+		
         client.add(torrentId, onTorrent)
 		
 		let torrent = {
@@ -133,6 +146,7 @@ export default {
 		}
 
 		self.torrents.push(torrent)
+		this.$root.$store.dispatch('torrents/onAdded', torrent); 
 	},
 	
     onPaste(event) {
@@ -190,7 +204,26 @@ export default {
       },
       isFailed() {
         return this.currentStatus === STATUS_FAILED;
-      }
+      },
+	  addTorrentRequest() {
+		return this.$store.state.torrents.add;
+	  }
+   },
+   watch: {
+	   addTorrentRequest(newState, oldState) {
+		  if (newState.torrent && newState.torrent.magnet && newState.torrent.magnet !== '') {
+		     try {
+				this.addTorrent(newState.torrent.magnet)
+			 }
+			 catch (err) {
+				let msg = 'Unable to add torrent. ';
+				if (err.message && err.message !== '')
+					msg += err.message;
+					
+				this.$store.dispatch('alert/error', msg);
+			 }
+		  }
+	   }
    },
    mounted() {
       this.reset();
@@ -202,5 +235,35 @@ export default {
 }
 </script>
 
+<style scoped>
+.alert {
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
+  margin: 0 auto;
+  width: 70%;
+  margin-top: 20px;
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: black;
+}
+
+.alert.success {
+    background-color: #04AA6D;
+}
+
+</style>
 
  

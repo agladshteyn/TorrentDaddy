@@ -282,6 +282,8 @@ export default {
 	onDeleteDialogOkClick () {
 		if (this.torrent.instance)
             this.torrent.instance.destroy()
+		
+		this.$store.dispatch('torrents/remove'); 
 			
 		clearInterval(this.interval)
 		this.$emit('destroyed', this.torrent)
